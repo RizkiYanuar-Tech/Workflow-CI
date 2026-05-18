@@ -34,7 +34,7 @@ jobs:
 
       - name: Run Modelling.py
         run: |
-          mlflow run MLproject --env-manager=local
+          mlflow run MLProject --env-manager=local
 
       - name: Build Docker Model
         run: |

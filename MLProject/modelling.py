@@ -60,7 +60,7 @@ def load_train_model(feature_train, feature_test, label_train, label_test, args)
     if "MLFLOW_RUN_ID" in os.environ:
         del os.environ["MLFLOW_RUN_ID"]
 
-    dagshub.init()
+    dagshub.init(repo_owner='RizkiYanuar-Tech', repo_name='Workflow-CI', mlflow=True)
 
     mlflow.set_experiment("Base Model RandomForest")
     with mlflow.start_run(run_name='RF_Best_Model'):

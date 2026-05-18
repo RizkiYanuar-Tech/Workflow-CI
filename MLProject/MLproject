@@ -1,0 +1,20 @@
+name: Workflow-Automation Model
+
+conda_env: conda.yaml
+
+entry_points:
+  main:
+    parameters:
+      dataset: {type: string, default: 'clean_data.csv'}
+      criterion: {type: string, default: 'gini'}
+      max_depth: {type: int, default: 5}
+      min_samples_split: {type: int, default: 5}
+      n_estimators: {type: int, default: 70}
+
+    command: >
+      python modelling.py 
+      --dataset {dataset} 
+      --criterion {criterion} 
+      --max_depth {max_depth} 
+      --min_samples_split {min_samples_split} 
+      --n_estimators {n_estimators}

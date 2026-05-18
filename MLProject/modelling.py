@@ -1,5 +1,6 @@
 import pandas as pd
 import dagshub
+import os
 import mlflow
 import argparse
 from dotenv import load_dotenv
@@ -55,13 +56,17 @@ def load_train_model(feature_train, feature_test, label_train, label_test, args)
         None: Fungsi ini tidak mengembalikan nilai di dalam script, melainkan 
               langsung menyimpan artefak dan metrik ke cloud (DagsHub).
     """
+
+    if "MLFLOW_RUN_ID" in os.environ:
+        del os.environ["MLFLOW_RUN_ID"]
+
     dagshub.init(repo_owner='RizkiYanuar-Tech',
-                 repo_name='SMSML_Muhammad_Rizki_Yanuar',
+                 repo_name='Workflow-CI',
                  mlflow=True
                 )
 
     mlflow.set_experiment("Base Model RandomForest")
-    with mlflow.start_run(run_name='RF_Baseline_Model'):
+    with mlflow.start_run(run_name='RF_Best_Model'):
         rf = RandomForestClassifier(random_state=42,
                                     class_weight='balanced',
                                     criterion=args.criterion,
@@ -85,14 +90,15 @@ def load_train_model(feature_train, feature_test, label_train, label_test, args)
         mlflow.log_metric('Recall', recall)
         mlflow.log_metric('f1_score', f1score)
 
-        mlflow.sklearn.log_model(rf, 'Random_Forest_Baseline')
+        mlflow.sklearn.log_model(rf,
+                                 'Random_Forest_Baseline',
+                                 registered_model_name="Model_Churn")
 
         print('Model selesai dilatih dan disimpan dalam dagshub')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Script Pelatihan Model RF Churn")
-    parser.add_argument("--data_path", type=str, required=True, help='dataset')
-
+    parser.add_argument("--dataset", type=str, required=True, help='dataset')
     parser.add_argument("--criterion", type=str, default="gini")
     parser.add_argument("--max_depth", type=int, default=5)
     parser.add_argument("--min_samples_split", type=int, default=5)
@@ -100,5 +106,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    X_train, X_test, y_train, y_test = load_splitting_data(args.data_path)
+    X_train, X_test, y_train, y_test = load_splitting_data(args.dataset)
     load_train_model(X_train, X_test, y_train, y_test, args)

@@ -39,7 +39,7 @@ jobs:
       - name: Build Docker Model
         run: |
           # Ambil model berdasarkan nama dan versi terakhir di dagshub
-          mlflow models build-docker --model-uri "models:/dicoding-smsml/latest" --name 'dicoding-smsml'
+          mlflow models build-docker --model-uri "models:/Model_Churn/latest" --name 'dicoding-smsml'
 
       - name: Login ke Docker Hub
         uses: docker/login-action@v3

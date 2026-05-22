@@ -3,6 +3,7 @@ import dagshub
 import os
 import mlflow
 import argparse
+import joblib
 from dotenv import load_dotenv
 from sklearn.ensemble  import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -87,6 +88,8 @@ def load_train_model(feature_train, feature_test, label_train, label_test, args)
         mlflow.log_metric('Precision', precision)
         mlflow.log_metric('Recall', recall)
         mlflow.log_metric('f1_score', f1score)
+
+        joblib.dump(rf, 'model.pkl')
 
         mlflow.sklearn.log_model(rf,
                                  'Random_Forest_Baseline',

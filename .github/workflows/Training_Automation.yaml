@@ -36,6 +36,16 @@ jobs:
         run: |
           mlflow run MLProject --env-manager=local
 
+      - name: Github Release & Upload Artifact
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }} # Versi Dinamis
+          name: "Model rilis v1.0.${{ github.run_number }}"
+          files: |
+            *.pkl # Simpan file model fisik ke release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build Docker Model
         run: |
           # Ambil model berdasarkan nama dan versi terakhir di dagshub
